@@ -9,6 +9,7 @@ interface PartSelectorProps {
   onPartSelect: (part: CharacterPart) => void;
 }
 
+// Note: This component is currently unused after dynamic categories refactor.
 export default function PartSelector({ title, parts, selectedPart, onPartSelect }: PartSelectorProps) {
   return (
     <div className="mb-6">
@@ -27,7 +28,7 @@ export default function PartSelector({ title, parts, selectedPart, onPartSelect 
             <img
               src={part.imageUrl}
               alt={part.name}
-              className="w-full h-20 object-cover rounded-lg"
+              className="w-full h-full object-cover rounded-lg"
             />
             <div className="absolute top-1 right-1">
               {selectedPart.id === part.id && (
