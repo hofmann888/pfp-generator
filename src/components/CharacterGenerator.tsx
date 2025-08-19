@@ -30,7 +30,7 @@ export default function CharacterGenerator() {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [selectedByCategory, setSelectedByCategory] = useState<Record<string, CharacterPart | undefined>>({});
 
-  const [generatedImage, setGeneratedImage] = useState<string | null>(null);
+  // const [generatedImage, setGeneratedImage] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -149,7 +149,8 @@ export default function CharacterGenerator() {
       }
 
       const dataUrl = canvas.toDataURL('image/png');
-      setGeneratedImage(dataUrl);
+      // setGeneratedImage(dataUrl);
+      downloadCharacter(dataUrl);
     } catch (error) {
       console.error('Ошибка генерации персонажа:', error);
     } finally {
@@ -157,7 +158,7 @@ export default function CharacterGenerator() {
     }
   };
 
-  const downloadCharacter = () => {
+  const downloadCharacter = (generatedImage: string) => {
     if (!generatedImage) return;
     
     const link = document.createElement('a');
@@ -167,38 +168,36 @@ export default function CharacterGenerator() {
   };
 
   const sortRarities = (rarities: Record<string, CharacterPart[]>) => {
-    const priority: Record<string, number> = { legendary: 1, epic: 2, rare: 3, uncommon: 4, common: 5 };
+    const priority: Record<string, number> = { common: 1, rare: 2, epic: 3, legendary: 4, mythical: 5 };
     return Object.keys(rarities).sort((a, b) => (priority[a] || 999) - (priority[b] || 999));
   };
 
   const activeCategoryData = activeCategory ? assets.find(c => c.category === activeCategory) : undefined;
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <div className="flex max-md:flex-col-reverse gap-8">
       {/* Левая панель - выбор частей */}
-      <div className="space-y-6">
-        <div className="bg-white rounded-lg shadow-lg p-6">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">Выберите части персонажа</h2>
+      {activeCategoryData && (
+        <div className="w-1/2 max-md:w-full">
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            <div className="flex flex-wrap gap-1 text-gray-800 mb-4">
+              {assets.map(cat => {
+                const isActive = cat.category === activeCategory;
+                return (
+                  <button
+                    key={cat.category}
+                    type="button"
+                    onClick={() => setActiveCategory(cat.category)}
+                    className={`rounded-lg border-2 px-2 py-1 cursor-pointer transition-colors ${
+                      isActive ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'
+                    }`}
+                  >
+                    {cat.category}
+                  </button>
+                );
+              })}
+            </div>
 
-          <div className="flex flex-wrap gap-2 text-gray-800 mb-4">
-            {assets.map(cat => {
-              const isActive = cat.category === activeCategory;
-              return (
-                <button
-                  key={cat.category}
-                  type="button"
-                  onClick={() => setActiveCategory(cat.category)}
-                  className={`rounded-lg border-2 px-3 py-1 cursor-pointer transition-colors ${
-                    isActive ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'
-                  }`}
-                >
-                  {cat.category}
-                </button>
-              );
-            })}
-          </div>
-
-          {activeCategoryData ? (
             <div className="space-y-4">
               {sortRarities(activeCategoryData.rarities).map(rarity => (
                 <div key={rarity} className="">
@@ -234,25 +233,15 @@ export default function CharacterGenerator() {
                 </div>
               ))}
             </div>
-          ) : (
-            <p className="text-gray-500">Нет доступных ассетов.</p>
-          )}
-
-          <button
-            onClick={generateCharacter}
-            disabled={isGenerating}
-            className="w-full mt-6 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold py-3 px-6 rounded-lg hover:from-blue-600 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
-          >
-            {isGenerating ? 'Generating...' : 'Generate'}
-          </button>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Правая панель - предпросмотр и результат */}
-      <div className="space-y-6">
-        <CharacterPreview selectedParts={selectedForPreview} />
+      <div className="w-1/2 max-md:w-full">
+        {activeCategoryData && <CharacterPreview selectedParts={selectedForPreview} isGenerating={isGenerating} generate={generateCharacter} />}
         
-        {generatedImage && (
+        {/* {generatedImage && (
           <div className="bg-white rounded-lg shadow-lg p-6">
             <h3 className="text-xl font-bold text-gray-800 mb-4">Результат</h3>
             <div className="text-center">
@@ -269,7 +258,7 @@ export default function CharacterGenerator() {
               </button>
             </div>
           </div>
-        )}
+        )} */}
       </div>
 
       {/* Скрытый canvas для генерации изображения */}
