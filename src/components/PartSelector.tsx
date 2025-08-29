@@ -1,45 +1,49 @@
 'use client';
 
 import { CharacterPart } from './CharacterGenerator';
+import useEmblaCarousel from 'embla-carousel-react';
+import Image from 'next/image';
 
 interface PartSelectorProps {
-  title: string;
-  parts: CharacterPart[];
-  selectedPart: CharacterPart;
-  onPartSelect: (part: CharacterPart) => void;
+  activeCategoryData: any;
+  selectedByCategory: any,
+  setSelection: (categoryName: string, part: CharacterPart) => void;
 }
 
-// Note: This component is currently unused after dynamic categories refactor.
-export default function PartSelector({ title, parts, selectedPart, onPartSelect }: PartSelectorProps) {
+export default function PartSelector({ activeCategoryData, setSelection, selectedByCategory }: PartSelectorProps) {
+  const [emblaRef] = useEmblaCarousel({ align: 'start', loop: true });
+
+  function sortRarities(rarities: Record<string, CharacterPart[]>) {
+    const priority: Record<string, number> = { common: 1, rare: 2, epic: 3, legendary: 4, mythical: 5 };
+    return Object.keys(rarities).sort((a, b) => (priority[a] || 999) - (priority[b] || 999));
+  };
+
   return (
-    <div className="mb-6">
-      <h3 className="text-lg font-semibold text-gray-700 mb-3">{title}</h3>
-      <div className="grid grid-cols-2 gap-3">
-        {parts.map((part) => (
-          <div
-            key={part.id}
-            className={`relative cursor-pointer rounded-lg border-2 transition-all ${
-              selectedPart.id === part.id
-                ? 'border-blue-500 bg-blue-50'
-                : 'border-gray-200 hover:border-gray-300'
-            }`}
-            onClick={() => onPartSelect(part)}
-          >
-            <img
-              src={part.imageUrl}
-              alt={part.name}
-              className="w-full h-full object-cover rounded-lg"
-            />
-            <div className="absolute top-1 right-1">
-              {selectedPart.id === part.id && (
-                <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
-                  <span className="text-white text-xs">✓</span>
+    <div className="embla rounded-xl p-3 mt-5 bg-[#F0FF6B] border-2 border-black shadow-[1px_2px_0px_3px_#000]">
+      <div className="overflow-hidden p-[4px_2px]" ref={emblaRef}>
+        <div className="embla__container flex items-center">
+          {sortRarities(activeCategoryData.rarities).map(rarity => 
+            activeCategoryData.rarities[rarity].map((part: any) => {
+              const isSelected = selectedByCategory[activeCategoryData.category]?.id === part.id;
+              return (
+                <div key={part.id} className={`embla__slide ${isSelected ? 'flex-[0_0_28%]' : 'flex-[0_0_24%]'}`}>
+                  <div
+                    className={`border-1 border-black rounded-2xl shadow-[1px_2px_0px_1px_#000] ${isSelected ? 'border-3' : 'border-1'}`}
+                    onClick={() => setSelection(activeCategoryData.category, part)}
+                  >
+                    <Image
+                      src={part.imageUrl}
+                      alt={part.name}
+                      width={73}
+                      height={73}
+                      className="w-full h-full object-cover rounded-2xl mb-[-1px] bg-white"
+                    />
+                  </div>
                 </div>
-              )}
-            </div>
-            <p className="text-xs text-center p-2 text-gray-600">{part.name}</p>
-          </div>
-        ))}
+              );
+            }
+          ))}
+        </div>
       </div>
     </div>
   );

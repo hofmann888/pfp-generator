@@ -1,6 +1,7 @@
 'use client';
 
 import { CharacterParts } from './CharacterGenerator';
+import Image from 'next/image';
 
 interface CharacterPreviewProps {
   selectedParts: CharacterParts;
@@ -13,77 +14,76 @@ export default function CharacterPreview({ selectedParts, isGenerating, generate
     <div className="text-center">
       <div className="relative inline-block w-full">
         {/* Контейнер для персонажа */}
-        <div className="relative w-full h-96 rounded-lg border-2 border-black shadow-[1px_2px_0px_3px_#000] overflow-hidden">
+        <div className="relative w-full h-[358px] rounded-lg border-2 border-black shadow-[1px_2px_0px_3px_#000] overflow-hidden">
           <div className="absolute w-full h-full">
-            <img
+            <Image
               src={selectedParts.background.imageUrl}
               alt={selectedParts.background.name}
+              width={358}
+              height={358}
               className="object-cover w-full h-full"
             />
           </div>
           
           <div className="absolute w-full h-full">
-            <img
+            <Image
               src={selectedParts.accessory.imageUrl}
               alt={selectedParts.accessory.name}
+              width={358}
+              height={358}
               className="object-cover w-full h-full"
             />
           </div>
           
           <div className="absolute w-full h-full">
-            <img
+            <Image
               src={selectedParts.cloth.imageUrl}
               alt={selectedParts.cloth.name}
+              width={358}
+              height={358}
               className="object-cover w-full h-full"
             />
           </div>
 
           <div className="absolute w-full h-full">
-            <img
+            <Image
               src={selectedParts.eyes.imageUrl}
               alt={selectedParts.eyes.name}
+              width={358}
+              height={358}
               className="object-cover w-full h-full"
             />
           </div>
 
           <div className="absolute w-full h-full">
-            <img
+            <Image
               src={selectedParts.cap.imageUrl}
               alt={selectedParts.cap.name}
+              width={358}
+              height={358}
               className="object-cover w-full h-full"
             />
           </div>
 
           <div className="absolute w-full h-full">
-            <img
+            <Image
               src={selectedParts.beard.imageUrl}
               alt={selectedParts.beard.name}
+              width={358}
+              height={358}
               className="object-cover w-full h-full"
             />
           </div>
 
           <div className="absolute w-full h-full">
-            <img
+            <Image
               src={selectedParts.mouth.imageUrl}
               alt={selectedParts.mouth.name}
+              width={358}
+              height={358}
               className="object-cover w-full h-full"
             />
           </div>
-          
-          {/* Аксессуары */}
-          {/* {selectedParts.accessories.map((accessory, index) => (
-            <div
-              key={accessory.id}
-              className="absolute bottom-2"
-              style={{ left: `${20 + index * 60}px` }}
-            >
-              <img
-                src={accessory.imageUrl}
-                alt={accessory.name}
-                className="w-12 h-12 object-cover"
-              />
-            </div>
-          ))} */}
         </div>
       </div>
 
@@ -94,19 +94,6 @@ export default function CharacterPreview({ selectedParts, isGenerating, generate
       >
         {isGenerating ? 'Generating...' : 'Download your pfp'}
       </button>
-      
-      {/* <div className="mt-4 text-sm text-gray-600">
-        <p>Выбранные части:</p>
-        <ul className="mt-2 space-y-1">
-          <li>• {selectedParts.accessory.name}</li>
-          <li>• {selectedParts.background.name}</li>
-          <li>• {selectedParts.beard.name}</li>
-          <li>• {selectedParts.cap.name}</li>
-          <li>• {selectedParts.cloth.name}</li>
-          <li>• {selectedParts.eyes.name}</li>
-          <li>• {selectedParts.mouth.name}</li>
-        </ul>
-      </div> */}
     </div>
   );
 } 
