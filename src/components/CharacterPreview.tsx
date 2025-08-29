@@ -13,77 +13,20 @@ export default function CharacterPreview({ selectedParts, isGenerating, generate
   return (
     <div className="text-center">
       <div className="relative inline-block w-full">
-        {/* Контейнер для персонажа */}
         <div className="relative w-full h-[358px] rounded-lg border-2 border-black shadow-[1px_2px_0px_3px_#000] overflow-hidden">
-          <div className="absolute w-full h-full">
-            <Image
-              src={selectedParts.background.imageUrl}
-              alt={selectedParts.background.name}
-              width={358}
-              height={358}
-              className="object-cover w-full h-full"
-            />
-          </div>
-          
-          <div className="absolute w-full h-full">
-            <Image
-              src={selectedParts.accessory.imageUrl}
-              alt={selectedParts.accessory.name}
-              width={358}
-              height={358}
-              className="object-cover w-full h-full"
-            />
-          </div>
-          
-          <div className="absolute w-full h-full">
-            <Image
-              src={selectedParts.cloth.imageUrl}
-              alt={selectedParts.cloth.name}
-              width={358}
-              height={358}
-              className="object-cover w-full h-full"
-            />
-          </div>
-
-          <div className="absolute w-full h-full">
-            <Image
-              src={selectedParts.eyes.imageUrl}
-              alt={selectedParts.eyes.name}
-              width={358}
-              height={358}
-              className="object-cover w-full h-full"
-            />
-          </div>
-
-          <div className="absolute w-full h-full">
-            <Image
-              src={selectedParts.cap.imageUrl}
-              alt={selectedParts.cap.name}
-              width={358}
-              height={358}
-              className="object-cover w-full h-full"
-            />
-          </div>
-
-          <div className="absolute w-full h-full">
-            <Image
-              src={selectedParts.beard.imageUrl}
-              alt={selectedParts.beard.name}
-              width={358}
-              height={358}
-              className="object-cover w-full h-full"
-            />
-          </div>
-
-          <div className="absolute w-full h-full">
-            <Image
-              src={selectedParts.mouth.imageUrl}
-              alt={selectedParts.mouth.name}
-              width={358}
-              height={358}
-              className="object-cover w-full h-full"
-            />
-          </div>
+          {Object.keys(selectedParts).map((key: any) => {
+            return (
+              <div key={key} className="absolute w-full h-full">
+                <Image
+                  src={selectedParts[key as keyof CharacterParts].imageUrl}
+                  alt={selectedParts[key as keyof CharacterParts].name}
+                  width={358}
+                  height={358}
+                  className="object-cover w-full h-full"
+                />
+              </div>
+            )
+          })}
         </div>
       </div>
 

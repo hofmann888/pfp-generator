@@ -139,14 +139,14 @@ export default function CharacterGenerator() {
           const img = await loadImage(part.imageUrl);
           ctx.drawImage(img, x, y);
         } catch (error) {
-          console.error(`Ошибка загрузки изображения для ${part?.name}:`, error);
+          console.error(`Image download error for ${part?.name}:`, error);
         }
       }
 
       const dataUrl = canvas.toDataURL('image/png');
       downloadCharacter(dataUrl);
     } catch (error) {
-      console.error('Ошибка генерации персонажа:', error);
+      console.error('Character generation error:', error);
     } finally {
       setIsGenerating(false);
     }
@@ -165,12 +165,10 @@ export default function CharacterGenerator() {
 
   return (
     <div className="flex gap-8 max-md:gap-0 max-md:flex-col">
-      {/* Правая панель - предпросмотр и результат */}
       <div className="w-1/2 max-md:w-full">
         {activeCategoryData && <CharacterPreview selectedParts={selectedForPreview} isGenerating={isGenerating} generate={generateCharacter} />}
       </div>
 
-      {/* Левая панель - выбор частей */}
       {activeCategoryData && (
         <div className="w-1/2 max-md:w-full">
           <CategorySelector 
@@ -187,7 +185,6 @@ export default function CharacterGenerator() {
         </div>
       )}
 
-      {/* Скрытый canvas для генерации изображения */}
       <canvas
         ref={canvasRef}
         className="hidden"
