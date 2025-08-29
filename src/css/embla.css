@@ -1,0 +1,14 @@
+.embla {
+  /* max-width: 48rem; */
+  --slide-height: 5rem;
+  --slide-spacing: 1rem;
+}
+.embla__container {
+  touch-action: pan-y pinch-zoom;
+  margin-left: calc(var(--slide-spacing) * -1);
+}
+.embla__slide {
+  transform: translate3d(0, 0, 0);
+  min-width: 0;
+  padding-left: var(--slide-spacing);
+}

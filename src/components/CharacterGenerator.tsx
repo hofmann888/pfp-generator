@@ -1,7 +1,9 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import useEmblaCarousel from 'embla-carousel-react';
 import CharacterPreview from './CharacterPreview';
+import CategorySelector from './CategorySelector';
 
 export interface CharacterPart {
   id: string;
@@ -28,7 +30,10 @@ interface CategoryAssets {
 export default function CharacterGenerator() {
   const [assets, setAssets] = useState<CategoryAssets[]>([]);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const [activeCategoryIdx, setActiveCategoryIdx] = useState<number>(0);
   const [selectedByCategory, setSelectedByCategory] = useState<Record<string, CharacterPart | undefined>>({});
+
+  const [emblaRef, emblaApi] = useEmblaCarousel({ align: 'start', loop: true });
 
   // const [generatedImage, setGeneratedImage] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -174,64 +179,70 @@ export default function CharacterGenerator() {
 
   const activeCategoryData = activeCategory ? assets.find(c => c.category === activeCategory) : undefined;
 
+
+
+  console.log('assets', assets);
+  console.log('activeCategoryData', activeCategoryData);
+
+  function switchCategoryIdx(idx: number) {
+    if (idx < 0 || idx >= assets.length) return;
+    setActiveCategoryIdx(idx);
+    setActiveCategory(assets[idx].category);
+  }
+
+  
+
   return (
-    <div className="flex max-md:flex-col-reverse gap-8">
+    <div className="flex gap-8 max-md:gap-0 max-md:flex-col-reverse">
       {/* Левая панель - выбор частей */}
       {activeCategoryData && (
         <div className="w-1/2 max-md:w-full">
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <div className="flex flex-wrap gap-1 text-gray-800 mb-4">
-              {assets.map(cat => {
-                const isActive = cat.category === activeCategory;
-                return (
-                  <button
-                    key={cat.category}
-                    type="button"
-                    onClick={() => setActiveCategory(cat.category)}
-                    className={`rounded-lg border-2 px-2 py-1 cursor-pointer transition-colors ${
-                      isActive ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'
-                    }`}
-                  >
-                    {cat.category}
-                  </button>
-                );
-              })}
+          <div className="rounded-lg shadow-lg">
+            {/* <CategorySelector /> */}
+            <div className="flex justify-between gap-4 max-md:mt-5">
+              <button 
+                className="p-3 rounded-2xl bg-[#F45CFF] border-2 border-black shadow-[1px_3px_0px_3px_#000]"
+                onClick={() => switchCategoryIdx(activeCategoryIdx - 1)}
+              >
+                <img src="/img/arrow.png" alt="arrow" className="rotate-y-180" />
+              </button>
+
+              <div className="w-full px-6 py-3 rounded-2xl bg-[#00F2FE] border-2 border-black shadow-[2px_4px_0px_0px_#000] overflow-hidden uppercase text-center text-xl">
+                {assets[activeCategoryIdx].category}
+              </div>
+
+              <button 
+                className="p-3 rounded-2xl bg-[#F45CFF] border-2 border-black shadow-[1px_3px_0px_3px_#000]"
+                onClick={() => switchCategoryIdx(activeCategoryIdx + 1)}
+              >
+                <img src="/img/arrow.png" alt="arrow" />
+              </button>
             </div>
 
-            <div className="space-y-4">
-              {sortRarities(activeCategoryData.rarities).map(rarity => (
-                <div key={rarity} className="">
-                  <h3 className="text-lg font-semibold text-gray-700 mb-2 capitalize">{rarity}</h3>
-                  <div className="grid grid-cols-2 gap-3">
-                    {activeCategoryData.rarities[rarity].map((part) => {
+            <div className="embla rounded-xl p-3 mt-5 bg-[#F0FF6B] border-2 border-black shadow-[1px_2px_0px_3px_#000]">
+              <div className="overflow-hidden p-[4px_2px]" ref={emblaRef}>
+                <div className="embla__container flex items-center">
+                  {sortRarities(activeCategoryData.rarities).map(rarity => 
+                    activeCategoryData.rarities[rarity].map((part) => {
                       const isSelected = selectedByCategory[activeCategoryData.category]?.id === part.id;
                       return (
-                        <div
-                          key={part.id}
-                          className={`relative cursor-pointer rounded-lg border-2 transition-all ${
-                            isSelected ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'
-                          }`}
-                          onClick={() => setSelection(activeCategoryData.category, part)}
-                        >
-                          <img
-                            src={part.imageUrl}
-                            alt={part.name}
-                            className="w-full h-full object-cover rounded-lg"
-                          />
-                          <div className="absolute top-1 right-1">
-                            {isSelected && (
-                              <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
-                                <span className="text-white text-xs">✓</span>
-                              </div>
-                            )}
+                        <div key={part.id} className={`embla__slide ${isSelected ? 'flex-[0_0_28%]' : 'flex-[0_0_24%]'}`}>
+                          <div
+                            className={`border-1 border-black rounded-2xl shadow-[1px_2px_0px_1px_#000] ${isSelected ? 'border-3' : 'border-1'}`}
+                            onClick={() => setSelection(activeCategoryData.category, part)}
+                          >
+                            <img
+                              src={part.imageUrl}
+                              alt={part.name}
+                              className="w-full h-full object-cover rounded-2xl mb-[-1px] bg-white"
+                            />
                           </div>
-                          {/* <p className="text-xs text-center p-2 text-gray-600">{part.name}</p> */}
                         </div>
                       );
-                    })}
-                  </div>
+                    }
+                  ))}
                 </div>
-              ))}
+              </div>
             </div>
           </div>
         </div>

@@ -15,7 +15,7 @@ interface CategoryPayload {
 
 export async function GET() {
   try {
-    const publicImgDir = path.join(process.cwd(), 'public', 'img');
+    const publicImgDir = path.join(process.cwd(), 'public', 'img', 'pfp');
 
     const categories = await fs.readdir(publicImgDir, { withFileTypes: true });
 
@@ -45,7 +45,7 @@ export async function GET() {
             if (!['.png', '.jpg', '.jpeg', '.gif', '.webp', '.svg'].includes(ext)) continue;
 
             const base = path.parse(file.name).name;
-            const imageUrl = `/img/${category}/${rarity}/${file.name}`;
+            const imageUrl = `/img/pfp/${category}/${rarity}/${file.name}`;
             items.push({
               id: `${category}-${rarity}-${base}`,
               name: base,
