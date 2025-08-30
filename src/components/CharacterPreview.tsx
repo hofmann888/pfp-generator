@@ -33,7 +33,7 @@ export default function CharacterPreview({ selectedParts, isGenerating, generate
       <button
         onClick={generate}
         disabled={isGenerating}
-        className="w-full mt-4 py-3 px-6 rounded-2xl bg-[#F45CFF] border-2 border-black shadow-[1px_3px_0px_3px_#000] uppercase text-white text-shadow-contur"
+        className="w-full mt-4 py-3 px-6 rounded-2xl bg-[#F45CFF] border-2 border-black shadow-[1px_3px_0px_3px_#000] uppercase text-white text-shadow-contur cursor-pointer"
       >
         {isGenerating ? 'Generating...' : 'Download your pfp'}
       </button>

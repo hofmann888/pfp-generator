@@ -10,7 +10,7 @@ export default function CategorySelector({ activeCategory, activeCategoryIdx, sw
   return (
     <div className="flex justify-between gap-4 max-md:mt-5">
       <button 
-        className="p-3 rounded-2xl bg-[#F45CFF] border-2 border-black shadow-[1px_3px_0px_3px_#000]"
+        className="p-3 rounded-2xl bg-[#F45CFF] border-2 border-black shadow-[1px_3px_0px_3px_#000] cursor-pointer"
         onClick={() => switchCategoryIdx(activeCategoryIdx - 1)}
       >
         <Image src="/img/arrow.png" alt="arrow" width={33} height={20} className="rotate-y-180 min-w-[33px]" />
@@ -21,7 +21,7 @@ export default function CategorySelector({ activeCategory, activeCategoryIdx, sw
       </div>
 
       <button 
-        className="p-3 rounded-2xl bg-[#F45CFF] border-2 border-black shadow-[1px_3px_0px_3px_#000]"
+        className="p-3 rounded-2xl bg-[#F45CFF] border-2 border-black shadow-[1px_3px_0px_3px_#000] cursor-pointer"
         onClick={() => switchCategoryIdx(activeCategoryIdx + 1)}
       >
         <Image src="/img/arrow.png" alt="arrow" width={33} height={20} className="min-w-[33px]" />

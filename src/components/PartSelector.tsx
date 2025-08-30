@@ -28,7 +28,7 @@ export default function PartSelector({ activeCategoryData, setSelection, selecte
               return (
                 <div key={part.id} className={`embla__slide ${isSelected ? 'flex-[0_0_28%]' : 'flex-[0_0_24%]'}`}>
                   <div
-                    className={`border-1 border-black rounded-2xl shadow-[1px_2px_0px_1px_#000] ${isSelected ? 'border-3' : 'border-1'}`}
+                    className={`border-1 border-black rounded-2xl shadow-[1px_2px_0px_1px_#000] cursor-pointer ${isSelected ? 'border-3' : 'border-1'}`}
                     onClick={() => setSelection(activeCategoryData.category, part)}
                   >
                     <Image
