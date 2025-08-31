@@ -163,27 +163,33 @@ export default function CharacterGenerator() {
 
   const activeCategoryData = assets[activeCategoryIdx];
 
-  return (
+  return activeCategoryData && (
     <div className="flex gap-8 max-md:gap-0 max-md:flex-col">
       <div className="w-1/2 max-md:w-full">
-        {activeCategoryData && <CharacterPreview selectedParts={selectedForPreview} isGenerating={isGenerating} generate={generateCharacter} />}
+        <CharacterPreview selectedParts={selectedForPreview} />
+
+        <button
+          onClick={generateCharacter}
+          disabled={isGenerating}
+          className="w-full mt-4 py-3 px-6 rounded-2xl bg-[#F45CFF] border-2 border-black shadow-[1px_3px_0px_3px_#000] uppercase text-white text-shadow-contur cursor-pointer"
+        >
+          {isGenerating ? 'Generating...' : 'Download your pfp'}
+        </button>
       </div>
 
-      {activeCategoryData && (
-        <div className="w-1/2 max-md:w-full">
-          <CategorySelector 
-            activeCategory={assets[activeCategoryIdx].category}
-            activeCategoryIdx={activeCategoryIdx}
-            switchCategoryIdx={switchCategoryIdx}
-          />
-          
-          <PartSelector 
-            activeCategoryData={activeCategoryData} 
-            selectedByCategory={selectedByCategory}
-            setSelection={setSelection}
-          />
-        </div>
-      )}
+      <div className="w-1/2 max-md:w-full">
+        <CategorySelector 
+          activeCategory={assets[activeCategoryIdx].category}
+          activeCategoryIdx={activeCategoryIdx}
+          switchCategoryIdx={switchCategoryIdx}
+        />
+        
+        <PartSelector 
+          activeCategoryData={activeCategoryData} 
+          selectedByCategory={selectedByCategory}
+          setSelection={setSelection}
+        />
+      </div>
 
       <canvas
         ref={canvasRef}

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import TelegramProvider from "@/components/TelegramProvider";
 import "@/css/global.css";
 import "@/css/embla.css";
 
@@ -22,7 +23,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${marvinRegular.variable} antialiased text-shadow-contur`}>
-        {children}
+        <TelegramProvider>
+          {children}
+        </TelegramProvider>
       </body>
     </html>
   );
