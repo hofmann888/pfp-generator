@@ -1,6 +1,6 @@
 'use client';
 
-import { CharacterParts } from './CharacterGenerator';
+import { CharacterParts } from '@/lib/definitions';
 import Image from 'next/image';
 
 interface CharacterPreviewProps {

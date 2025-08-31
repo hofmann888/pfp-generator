@@ -1,6 +1,6 @@
 'use client';
 
-import { CharacterPart } from './CharacterGenerator';
+import { CharacterPart } from '@/lib/definitions';
 import useEmblaCarousel from 'embla-carousel-react';
 import Image from 'next/image';
 

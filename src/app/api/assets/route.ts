@@ -16,9 +16,7 @@ interface CategoryPayload {
 export async function GET() {
   try {
     const publicImgDir = path.join(process.cwd(), 'public', 'img', 'pfp');
-
     const categories = await fs.readdir(publicImgDir, { withFileTypes: true });
-
     const categoryPayloads: CategoryPayload[] = [];
 
     for (const categoryDirent of categories) {

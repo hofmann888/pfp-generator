@@ -1,30 +1,12 @@
 'use client';
 
+import { CategoryAssets, CharacterPart, CharacterParts } from '@/lib/definitions';
+import { downloadFile } from '@telegram-apps/sdk-react';
 import { useState, useRef, useEffect } from 'react';
 import CharacterPreview from './CharacterPreview';
 import CategorySelector from './CategorySelector';
 import PartSelector from './PartSelector';
 
-export interface CharacterPart {
-  id: string;
-  name: string;
-  imageUrl: string;
-}
-
-export interface CharacterParts {
-  accessory: CharacterPart;
-  background: CharacterPart;
-  beard: CharacterPart;
-  cap: CharacterPart;
-  cloth: CharacterPart;
-  eyes: CharacterPart;
-  mouth: CharacterPart;
-}
-
-interface CategoryAssets {
-  category: string;
-  rarities: Record<string, CharacterPart[]>;
-}
 
 export default function CharacterGenerator() {
   const [assets, setAssets] = useState<CategoryAssets[]>([]);
@@ -144,7 +126,7 @@ export default function CharacterGenerator() {
       }
 
       const dataUrl = canvas.toDataURL('image/png');
-      downloadCharacter(dataUrl);
+      await downloadCharacter(dataUrl);
     } catch (error) {
       console.error('Character generation error:', error);
     } finally {
@@ -152,13 +134,40 @@ export default function CharacterGenerator() {
     }
   };
 
-  function downloadCharacter(generatedImage: string) {
-    if (!generatedImage) return;
-    
-    const link = document.createElement('a');
-    link.download = 'character.png';
-    link.href = generatedImage;
-    link.click();
+  async function downloadCharacter(dataUrl: string) {
+    if (!dataUrl) return;
+
+    if (downloadFile.isAvailable()) { // Tg download
+      // Saving temporary file on server for tg
+      const saveResponse = await fetch('/api/img/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ dataUrl: dataUrl }),
+      });
+      const saveResult = await saveResponse.json();
+      if (!saveResult.success || !saveResult.uri.length) {
+        throw Error('Error saving tmp file');
+      }
+
+      // Tg download
+      await downloadFile(`${location.origin}/${saveResult.uri}`, 'character.png');
+
+      // Deleting temporary file from server
+      const deleteResponse = await fetch('/api/img/delete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ uri: saveResult.uri }),
+      });
+      const deleteResult = await deleteResponse.json();
+      if (!deleteResult.success) {
+        throw Error(`Error deleting tmp file ${saveResult.uri}`);
+      }
+    } else { // Web download
+      const link = document.createElement('a');
+      link.download = 'character.png';
+      link.href = dataUrl;
+      link.click();
+    }
   };
 
   const activeCategoryData = assets[activeCategoryIdx];
