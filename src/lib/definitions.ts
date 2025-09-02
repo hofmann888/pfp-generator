@@ -4,17 +4,16 @@ export interface CharacterPart {
   imageUrl: string;
 }
 
-export interface CharacterParts {
-  accessory: CharacterPart;
-  background: CharacterPart;
-  beard: CharacterPart;
-  cap: CharacterPart;
-  cloth: CharacterPart;
-  eyes: CharacterPart;
-  mouth: CharacterPart;
+export interface CharacterLayer {
+  layer: number;
+  parts: CharacterPart[];
 }
 
-export interface CategoryAssets {
-  category: string;
-  rarities: Record<string, CharacterPart[]>;
+export interface Character {
+  name: string;
+  layers: CharacterLayer[];
+}
+
+export interface CharacterAssets {
+  characters: Character[];
 }

@@ -1,32 +1,50 @@
 'use client';
 
-import { CategoryAssets, CharacterPart, CharacterParts } from '@/lib/definitions';
+import { CharacterAssets, CharacterPart } from '@/lib/definitions';
 import { downloadFile } from '@telegram-apps/sdk-react';
 import { useState, useRef, useEffect } from 'react';
 import CharacterPreview from './CharacterPreview';
-import CategorySelector from './CategorySelector';
+import CharacterSelector from './CharacterSelector';
+import LayerSelector from './LayerSelector';
 import PartSelector from './PartSelector';
 
-
 export default function CharacterGenerator() {
-  const [assets, setAssets] = useState<CategoryAssets[]>([]);
-  const [activeCategoryIdx, setActiveCategoryIdx] = useState<number>(0);
-  const [selectedByCategory, setSelectedByCategory] = useState<Record<string, CharacterPart | undefined>>({});
+  const [assets, setAssets] = useState<CharacterAssets | null>(null);
+  const [selectedCharacter, setSelectedCharacter] = useState<string>('');
+  const [selectedLayer, setSelectedLayer] = useState<number>(1);
+  const [selectedParts, setSelectedParts] = useState<CharacterPart[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
   
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  const drawOrder: Array<keyof CharacterParts> = [
-    'background', 'accessory', 'cloth', 'eyes', 'cap', 'beard', 'mouth',
-  ];
+  // Helper function to get random part from array
+  function getRandomPart(parts: CharacterPart[]): CharacterPart | null {
+    if (parts.length === 0) return null;
+    const randomIndex = Math.floor(Math.random() * parts.length);
+    return parts[randomIndex];
+  }
+
+  // Helper function to check if layer has only one part
+  function hasOnlyOnePart(layer: number): boolean {
+    if (!currentCharacter) return false;
+    const layerData = currentCharacter.layers.find(l => l.layer === layer);
+    return layerData ? layerData.parts.length === 1 : false;
+  }
 
   // Fetch assets on mount
   useEffect(() => {
     async function fetchAssets() {
       try {
         const res = await fetch('/api/assets', { cache: 'no-store' });
-        const data: { categories: CategoryAssets[] } = await res.json();
-        setAssets(data.categories);
+        const data: CharacterAssets = await res.json();
+        setAssets(data);
+        
+        // Set default character and first layer
+        if (data.characters.length > 0) {
+          const firstCharacter = data.characters[0];
+          setSelectedCharacter(firstCharacter.name);
+          setSelectedLayer(1);
+        }
       } catch (e) {
         console.error('Failed to load assets', e);
       }
@@ -35,59 +53,66 @@ export default function CharacterGenerator() {
     fetchAssets();
   }, []);
 
-  // Initialize activeCategory and defaults once assets are loaded
+  // Update selected parts when character changes (initialize all layers)
   useEffect(() => {
-    if (assets.length === 0) return;
-
-    setSelectedByCategory(prev => {
-      const next = { ...prev } as Record<string, CharacterPart | undefined>;
-      for (const c of assets) {
-        if (!next[c.category]) {
-          const first = getFirstItem(c);
-          if (first) next[c.category] = first;
+    if (!assets || !selectedCharacter) return;
+    
+    const character = assets.characters.find(c => c.name === selectedCharacter);
+    if (!character) return;
+    
+    // Initialize with random part from ALL layers of the character
+    // For layers with only one part, automatically select that part
+    const newSelectedParts: CharacterPart[] = [];
+    for (const layerData of character.layers) {
+      if (layerData.parts.length === 1) {
+        // If layer has only one part, automatically select it
+        newSelectedParts.push(layerData.parts[0]);
+      } else if (layerData.parts.length > 1) {
+        // If layer has multiple parts, select random one
+        const randomPart = getRandomPart(layerData.parts);
+        if (randomPart) {
+          newSelectedParts.push(randomPart);
         }
       }
-      return next;
-    });
-  }, [assets, activeCategoryIdx]);
-
-  function getFirstItem(category: CategoryAssets): CharacterPart | undefined {
-    const rarityPriority: Record<string, number> = { legendary: 1, epic: 2, rare: 3, uncommon: 4, common: 5 };
-    const keys = Object.keys(category.rarities).sort((a, b) => (rarityPriority[a] || 999) - (rarityPriority[b] || 999));
-    for (const r of keys) {
-      const items = category.rarities[r];
-      if (items && items.length > 0) return items[0];
     }
-    return undefined;
-  };
+    
+    setSelectedParts(newSelectedParts);
+  }, [assets, selectedCharacter]);
 
-  function getSelectedOrFirst(categoryName: string): CharacterPart {
-    const selected = selectedByCategory[categoryName];
-    if (selected) return selected;
-    const cat = assets.find(c => c.category === categoryName);
-    const first = cat ? getFirstItem(cat) : undefined;
-    // Fallback empty part to satisfy types if assets missing
-    return first || { id: `${categoryName}-none`, name: 'none', imageUrl: '' };
-  };
-
-  function setSelection(categoryName: string, part: CharacterPart) {
-    setSelectedByCategory(prev => ({ ...prev, [categoryName]: part }));
-  };
-
-  function switchCategoryIdx(idx: number) {
-    if (idx < 0 || idx >= assets.length) return;
-    setActiveCategoryIdx(idx);
+  function handleCharacterSelect(characterName: string) {
+    setSelectedCharacter(characterName);
+    // Reset to first layer when changing character
+    setSelectedLayer(1);
   }
 
-  const selectedForPreview: CharacterParts = {
-    background: getSelectedOrFirst('background'),
-    accessory: getSelectedOrFirst('accessory'),
-    cloth: getSelectedOrFirst('cloth'),
-    eyes: getSelectedOrFirst('eyes'),
-    cap: getSelectedOrFirst('cap'),
-    beard: getSelectedOrFirst('beard'),
-    mouth: getSelectedOrFirst('mouth'),
-  };
+  function handleLayerSelect(layer: number) {
+    setSelectedLayer(layer);
+    
+    // If the selected layer has only one part, ensure it's selected
+    if (currentCharacter) {
+      const layerData = currentCharacter.layers.find(l => l.layer === layer);
+      if (layerData && layerData.parts.length === 1) {
+        const singlePart = layerData.parts[0];
+        setSelectedParts(prev => {
+          const layerNum = parseInt(singlePart.id.split('-')[1]);
+          return prev.map(p => {
+            const pLayer = parseInt(p.id.split('-')[1]);
+            return pLayer === layerNum ? singlePart : p;
+          });
+        });
+      }
+    }
+  }
+
+  function handlePartSelect(part: CharacterPart) {
+    setSelectedParts(prev => {
+      const layer = parseInt(part.id.split('-')[1]);
+      return prev.map(p => {
+        const pLayer = parseInt(p.id.split('-')[1]);
+        return pLayer === layer ? part : p;
+      });
+    });
+  }
 
   async function generateCharacter() {
     setIsGenerating(true);
@@ -113,13 +138,18 @@ export default function CharacterGenerator() {
         });
       };
 
-      const orderedParts = drawOrder.map(key => ({ part: selectedForPreview[key], x: 0, y: 0 }));
-
-      for (const { part, x, y } of orderedParts) {
+      // Draw each part in order (by layer)
+      const sortedParts = [...selectedParts].sort((a, b) => {
+        const layerA = parseInt(a.id.split('-')[1]);
+        const layerB = parseInt(b.id.split('-')[1]);
+        return layerA - layerB;
+      });
+      
+      for (const part of sortedParts) {
         try {
           if (!part || !part.imageUrl) continue;
           const img = await loadImage(part.imageUrl);
-          ctx.drawImage(img, x, y);
+          ctx.drawImage(img, 0, 0);
         } catch (error) {
           console.error(`Image download error for ${part?.name}:`, error);
         }
@@ -132,7 +162,7 @@ export default function CharacterGenerator() {
     } finally {
       setIsGenerating(false);
     }
-  };
+  }
 
   async function downloadCharacter(dataUrl: string) {
     if (!dataUrl) return;
@@ -150,7 +180,7 @@ export default function CharacterGenerator() {
       }
 
       // Tg download
-      await downloadFile(`${location.origin}/${saveResult.uri}`, 'character.png');
+      await downloadFile(`${location.origin}/${saveResult.uri}`, `${selectedCharacter}.png`);
 
       // Deleting temporary file from server
       const deleteResponse = await fetch('/api/img/delete', {
@@ -164,18 +194,24 @@ export default function CharacterGenerator() {
       }
     } else { // Web download
       const link = document.createElement('a');
-      link.download = 'character.png';
+      link.download = `${selectedCharacter}.png`;
       link.href = dataUrl;
       link.click();
     }
-  };
+  }
 
-  const activeCategoryData = assets[activeCategoryIdx];
+  if (!assets || assets.characters.length === 0) {
+    return <div>Loading...</div>;
+  }
 
-  return activeCategoryData && (
+  const currentCharacter = assets.characters.find(c => c.name === selectedCharacter);
+  const currentLayer = currentCharacter?.layers.find(l => l.layer === selectedLayer);
+  const currentPart = selectedParts.find(p => p.id.includes(`-${selectedLayer}-`));
+
+  return (
     <div className="flex gap-8 max-md:gap-0 max-md:flex-col">
       <div className="w-1/2 max-md:w-full">
-        <CharacterPreview selectedParts={selectedForPreview} />
+        <CharacterPreview selectedParts={selectedParts} />
 
         <button
           onClick={generateCharacter}
@@ -187,17 +223,27 @@ export default function CharacterGenerator() {
       </div>
 
       <div className="w-1/2 max-md:w-full">
-        <CategorySelector 
-          activeCategory={assets[activeCategoryIdx].category}
-          activeCategoryIdx={activeCategoryIdx}
-          switchCategoryIdx={switchCategoryIdx}
+        <CharacterSelector 
+          characters={assets.characters}
+          selectedCharacter={selectedCharacter}
+          onCharacterSelect={handleCharacterSelect}
         />
         
-        <PartSelector 
-          activeCategoryData={activeCategoryData} 
-          selectedByCategory={selectedByCategory}
-          setSelection={setSelection}
-        />
+        {currentCharacter && (
+          <LayerSelector 
+            layers={currentCharacter.layers.filter(layer => layer.parts.length > 1)}
+            selectedLayer={selectedLayer}
+            onLayerSelect={handleLayerSelect}
+          />
+        )}
+        
+        {currentLayer && !hasOnlyOnePart(selectedLayer) && (
+          <PartSelector 
+            parts={currentLayer.parts}
+            selectedPart={currentPart || null}
+            onPartSelect={handlePartSelect}
+          />
+        )}
       </div>
 
       <canvas
@@ -208,4 +254,4 @@ export default function CharacterGenerator() {
       />
     </div>
   );
-} 
+}
