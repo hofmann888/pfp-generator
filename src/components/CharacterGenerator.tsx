@@ -81,7 +81,6 @@ export default function CharacterGenerator() {
 
   function handleCharacterSelect(characterName: string) {
     setSelectedCharacter(characterName);
-    // Reset to first layer when changing character
     setSelectedLayer(1);
   }
 
@@ -201,7 +200,7 @@ export default function CharacterGenerator() {
   }
 
   if (!assets || assets.characters.length === 0) {
-    return <div>Loading...</div>;
+    return <div className="min-h-[inherit] flex items-center justify-center">Loading...</div>;
   }
 
   const currentCharacter = assets.characters.find(c => c.name === selectedCharacter);
@@ -233,6 +232,7 @@ export default function CharacterGenerator() {
           <LayerSelector 
             layers={currentCharacter.layers.filter(layer => layer.parts.length > 1)}
             selectedLayer={selectedLayer}
+            selectedCharacter={selectedCharacter}
             onLayerSelect={handleLayerSelect}
           />
         )}

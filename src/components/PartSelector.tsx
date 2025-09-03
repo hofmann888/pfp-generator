@@ -15,7 +15,6 @@ export default function PartSelector({ parts, selectedPart, onPartSelect }: Part
 
   return (
     <div className="embla rounded-xl p-3 mt-5 bg-[#F0FF6B] border-2 border-black shadow-[1px_2px_0px_3px_#000]">
-      <h3 className="text-lg font-bold mb-3 text-center uppercase">Choose Part</h3>
       <div className="overflow-hidden p-[4px_2px]" ref={emblaRef}>
         <div className="embla__container flex items-center">
           {parts.map((part) => {
