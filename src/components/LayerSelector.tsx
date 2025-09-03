@@ -38,7 +38,7 @@ export default function LayerSelector({
       selectedItem={selectedLayerObj}
       onItemSelect={(layer) => onLayerSelect(layer.layer)}
       getItemLabel={(layer) => charachterLayers[selectedCharacter as CharacterName][layer.layer as any - 1]}
-      title="Choose Layer"
+      className="mt-5"
     />
   );
 }

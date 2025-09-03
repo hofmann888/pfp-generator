@@ -3,19 +3,19 @@
 import Image from 'next/image';
 
 interface NavigationSelectorProps<T> {
+  className?: string;
   items: T[];
   selectedItem: T;
   onItemSelect: (item: T) => void;
   getItemLabel: (item: T) => string;
-  title: string;
 }
 
 export default function NavigationSelector<T>({
+  className,
   items,
   selectedItem,
   onItemSelect,
   getItemLabel,
-  title
 }: NavigationSelectorProps<T>) {
   const currentIndex = items.findIndex(item => item === selectedItem);
   
@@ -36,31 +36,29 @@ export default function NavigationSelector<T>({
   };
 
   return (
-    <div className="flex justify-between gap-4 max-md:mt-5">
-      {/* <h3 className="text-lg font-bold mb-3 text-center uppercase">{title}</h3> */}
-      
+    <div className={`flex justify-between gap-14 max-md:gap-4 ${className} min-h-[80px] max-md:min-h-[56px]`}>
       {/* Previous button */}
       <button 
-        className="p-3 rounded-2xl bg-[#F45CFF] border-2 border-black shadow-[1px_3px_0px_3px_#000] cursor-pointer"
+        className="p-3 max-md:p-3 rounded-2xl bg-[#F45CFF] border-2 border-black shadow-[1px_3px_0px_3px_#000] cursor-pointer"
         onClick={handlePrevious}
         disabled={items.length <= 1}
       >
-        <Image src="/img/arrow.png" alt="arrow" width={33} height={20} className="rotate-y-180 min-w-[33px]" />
+        <Image src="/img/arrow.png" alt="arrow" width={33} height={20} className="rotate-y-180 min-w-[52px] max-md:min-w-[33px]" />
       </button>
       
       
       {/* Center text */}
-      <div className="w-full px-6 py-3 rounded-2xl bg-[#00F2FE] border-2 border-black shadow-[2px_4px_0px_0px_#000] overflow-hidden uppercase text-center text-xl">
+      <div className="flex items-center justify-center w-full rounded-2xl bg-[#00F2FE] border-2 border-black shadow-[2px_4px_0px_0px_#000] overflow-hidden uppercase text-center text-xl">
         {getItemLabel(selectedItem)}
       </div>
       
       {/* Next button */}
       <button 
-        className="p-3 rounded-2xl bg-[#F45CFF] border-2 border-black shadow-[1px_3px_0px_3px_#000] cursor-pointer"
+        className="p-3 max-md:p-3 rounded-2xl bg-[#F45CFF] border-2 border-black shadow-[1px_3px_0px_3px_#000] cursor-pointer"
         onClick={handleNext}
         disabled={items.length <= 1}
       >
-        <Image src="/img/arrow.png" alt="arrow" width={33} height={20} className="min-w-[33px]" />
+        <Image src="/img/arrow.png" alt="arrow" width={33} height={20} className="min-w-[52px] max-md:min-w-[33px]" />
       </button>
     </div>
   );

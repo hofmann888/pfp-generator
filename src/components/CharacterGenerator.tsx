@@ -208,20 +208,20 @@ export default function CharacterGenerator() {
   const currentPart = selectedParts.find(p => p.id.includes(`-${selectedLayer}-`));
 
   return (
-    <div className="flex gap-8 max-md:gap-0 max-md:flex-col">
+    <div className="flex gap-8 max-md:gap-0 max-md:flex-col min-h-[inherit]">
       <div className="w-1/2 max-md:w-full">
         <CharacterPreview selectedParts={selectedParts} />
 
         <button
           onClick={generateCharacter}
           disabled={isGenerating}
-          className="w-full mt-4 py-3 px-6 rounded-2xl bg-[#F45CFF] border-2 border-black shadow-[1px_3px_0px_3px_#000] uppercase text-white text-shadow-contur cursor-pointer"
+          className="min-md:hidden w-full mt-4 py-3 px-6 rounded-2xl bg-[#F45CFF] border-2 border-black shadow-[1px_3px_0px_3px_#000] uppercase text-white text-shadow-contur cursor-pointer"
         >
           {isGenerating ? 'Generating...' : 'Download your pfp'}
         </button>
       </div>
 
-      <div className="w-1/2 max-md:w-full">
+      <div className="w-1/2 max-md:w-full flex flex-col">
         <CharacterSelector 
           characters={assets.characters}
           selectedCharacter={selectedCharacter}
@@ -244,6 +244,14 @@ export default function CharacterGenerator() {
             onPartSelect={handlePartSelect}
           />
         )}
+
+        <button
+          onClick={generateCharacter}
+          disabled={isGenerating}
+          className="max-md:hidden min-h-[76px] w-full mt-4 py-3 px-6 rounded-2xl bg-[#F45CFF] border-2 border-black shadow-[1px_3px_0px_3px_#000] uppercase text-white text-3xl text-shadow-contur cursor-pointer"
+        >
+          {isGenerating ? 'Generating...' : 'Download your pfp'}
+        </button>
       </div>
 
       <canvas
