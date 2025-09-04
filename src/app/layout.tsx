@@ -13,15 +13,17 @@ const marvinRegular = localFont({
 export const metadata: Metadata = {
   title: "Build your Pyrate pfp!",
   description: "Made by $PYRATE.",
-  applicationName: "Pyrate pfp generator",
+  applicationName: "Pyrate pfp",
   icons: "/img/favicon.avif",
   openGraph: {
     title: 'Build your Pyrate pfp!',
     description: 'Made by $PYRATE.',
+    url: process.env.SITE_URL,
+    siteName: 'Pyrate pfp',
     images: [
       {
-        url: '/img/favicon.avif',
-        alt: 'Pyrate pfp generator',
+        url: `${process.env.SITE_URL}/img/favicon.avif`,
+        alt: 'Pyrate pfp',
       },
     ],
   },
