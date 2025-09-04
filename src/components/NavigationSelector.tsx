@@ -36,14 +36,14 @@ export default function NavigationSelector<T>({
   };
 
   return (
-    <div className={`flex justify-between gap-14 max-md:gap-4 ${className} min-h-[80px] max-md:min-h-[56px]`}>
+    <div className={`flex justify-between gap-14 max-2xl:gap-8 max-lg:gap-4 ${className} min-h-[80px] max-lg:min-h-[45px] max-md:min-h-[56px]`}>
       {/* Previous button */}
       <button 
-        className="p-3 max-md:p-3 rounded-2xl bg-[#F45CFF] border-2 border-black shadow-[1px_3px_0px_3px_#000] cursor-pointer"
+        className="p-3 max-lg:p-3 rounded-2xl bg-[#F45CFF] border-2 border-black shadow-[1px_3px_0px_3px_#000] cursor-pointer"
         onClick={handlePrevious}
         disabled={items.length <= 1}
       >
-        <Image src="/img/arrow.png" alt="arrow" width={33} height={20} className="rotate-y-180 min-w-[52px] max-md:min-w-[33px]" />
+        <Image src="/img/arrow.png" alt="arrow" width={33} height={20} className="rotate-y-180 min-w-[52px] max-lg:min-w-[33px]" />
       </button>
       
       
@@ -54,11 +54,11 @@ export default function NavigationSelector<T>({
       
       {/* Next button */}
       <button 
-        className="p-3 max-md:p-3 rounded-2xl bg-[#F45CFF] border-2 border-black shadow-[1px_3px_0px_3px_#000] cursor-pointer"
+        className="p-3 max-lg:p-3 rounded-2xl bg-[#F45CFF] border-2 border-black shadow-[1px_3px_0px_3px_#000] cursor-pointer"
         onClick={handleNext}
         disabled={items.length <= 1}
       >
-        <Image src="/img/arrow.png" alt="arrow" width={33} height={20} className="min-w-[52px] max-md:min-w-[33px]" />
+        <Image src="/img/arrow.png" alt="arrow" width={33} height={20} className="min-w-[52px] max-lg:min-w-[33px]" />
       </button>
     </div>
   );
