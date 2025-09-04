@@ -171,7 +171,7 @@ export default function CharacterGenerator() {
       const saveResponse = await fetch('/api/img/save', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ dataUrl: dataUrl }),
+        body: JSON.stringify({ dataUrl: dataUrl, character: selectedCharacter }),
       });
       const saveResult = await saveResponse.json();
       if (!saveResult.success || !saveResult.fileName.length) {
@@ -179,7 +179,7 @@ export default function CharacterGenerator() {
       }
 
       // Tg download
-      await downloadFile(`${location.origin}/api/img/${saveResult.fileName}`, `${selectedCharacter}.png`);
+      await downloadFile(`${location.origin}/api/img/${saveResult.fileName}`, `${saveResult.fileName}`);
 
       // Deleting temporary file from server
       const deleteResponse = await fetch('/api/img/delete', {

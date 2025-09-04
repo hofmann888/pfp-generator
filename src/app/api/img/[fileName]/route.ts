@@ -18,9 +18,12 @@ export async function GET(request: Request, { params }: { params: Promise<{ file
         'Content-Type': 'image/png',
         'Content-Length': imageBuffer.length as any as string,
         'Cache-Control': 'public, max-age=31536000, immutable',
+        'Content-Disposition': `attachment; filename="${fileName}"`,
+        'Access-Control-Allow-Origin': 'https://web.telegram.org',
       },
     });
   } catch (error) {
+    console.log(error);
     return new NextResponse(JSON.stringify({ error: error }), {
       status: 404,
       headers: { 'Content-Type': 'application/json' },
