@@ -15,6 +15,16 @@ export const metadata: Metadata = {
   description: "Made by $PYRATE.",
   applicationName: "Pyrate pfp generator",
   icons: "/img/favicon.avif",
+  openGraph: {
+    title: 'Build your Pyrate pfp!',
+    description: 'Made by $PYRATE.',
+    images: [
+      {
+        url: '/img/favicon.avif',
+        alt: 'Pyrate pfp generator',
+      },
+    ],
+  },
 };
 
 export default function RootLayout({
