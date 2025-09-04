@@ -1,22 +1,23 @@
 'use server'
 
-import fs from 'fs';
-import path from 'path';
 import { NextRequest, NextResponse } from 'next/server';
+import { TMP_IMG_DIR } from '@/lib/const';
+import path from 'path';
+import fs from 'fs';
 
-export async function POST(req: NextRequest) {
+export async function POST(request: NextRequest) {
   try {
-    const body  = await req.json();
+    const body  = await request.json();
     if (!body?.dataUrl) throw Error('Wrong request params.');
 
     const base64Data = body.dataUrl.replace(/^data:image\/\w+;base64,/, '');
     const buffer = Buffer.from(base64Data, 'base64');
-    const filename = `image-${Date.now()}.png`;
-    const filePath = path.join(process.cwd(), 'public', 'tmp', filename);
+    const fileName = `image-${Date.now()}.png`;
+    const filePath = path.join(TMP_IMG_DIR, fileName);
 
     await fs.promises.writeFile(filePath, buffer);
 
-    return NextResponse.json({ success: true, uri: `tmp/${filename}` });
+    return NextResponse.json({ success: true, fileName: `${fileName}` });
   } catch (error: any) {
     console.log(error);
     return NextResponse.json({ success: false, error }, { status: 500 });

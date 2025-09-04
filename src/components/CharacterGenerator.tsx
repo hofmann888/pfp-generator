@@ -174,22 +174,22 @@ export default function CharacterGenerator() {
         body: JSON.stringify({ dataUrl: dataUrl }),
       });
       const saveResult = await saveResponse.json();
-      if (!saveResult.success || !saveResult.uri.length) {
+      if (!saveResult.success || !saveResult.fileName.length) {
         throw Error('Error saving tmp file');
       }
 
       // Tg download
-      await downloadFile(`${location.origin}/${saveResult.uri}`, `${selectedCharacter}.png`);
+      await downloadFile(`${location.origin}/api/img/${saveResult.fileName}`, `${selectedCharacter}.png`);
 
       // Deleting temporary file from server
       const deleteResponse = await fetch('/api/img/delete', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ uri: saveResult.uri }),
+        body: JSON.stringify({ fileName: saveResult.fileName }),
       });
       const deleteResult = await deleteResponse.json();
       if (!deleteResult.success) {
-        throw Error(`Error deleting tmp file ${saveResult.uri}`);
+        throw Error(`Error deleting tmp file ${saveResult.fileName}`);
       }
     } else { // Web download
       const link = document.createElement('a');
