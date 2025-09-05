@@ -26,7 +26,6 @@ export default function CharacterSelector({
       selectedItem={selectedCharacterObj}
       onItemSelect={(character) => onCharacterSelect(character.name)}
       getItemLabel={(character) => character.name}
-      className="max-md:mt-5"
     />
   );
 }

@@ -3,7 +3,6 @@
 import Image from 'next/image';
 
 interface NavigationSelectorProps<T> {
-  className?: string;
   items: T[];
   selectedItem: T;
   onItemSelect: (item: T) => void;
@@ -11,7 +10,6 @@ interface NavigationSelectorProps<T> {
 }
 
 export default function NavigationSelector<T>({
-  className,
   items,
   selectedItem,
   onItemSelect,
@@ -36,8 +34,7 @@ export default function NavigationSelector<T>({
   };
 
   return (
-    <div className={`flex justify-between gap-14 max-2xl:gap-8 max-lg:gap-4 ${className} min-h-[80px] max-lg:min-h-[45px] max-md:min-h-[56px]`}>
-      {/* Previous button */}
+    <div className={`flex justify-between gap-14 max-2xl:gap-8 max-lg:gap-4 min-h-[80px] max-xl:min-h-[56px] max-lg:min-h-[45px] max-md:min-h-[56px]`}>
       <button 
         className="p-3 max-lg:p-3 rounded-2xl bg-[#F45CFF] border-2 border-black shadow-[1px_3px_0px_3px_#000] cursor-pointer"
         onClick={handlePrevious}
@@ -46,13 +43,10 @@ export default function NavigationSelector<T>({
         <Image src="/img/arrow.png" alt="arrow" width={33} height={20} className="rotate-y-180 min-w-[52px] max-lg:min-w-[33px]" />
       </button>
       
-      
-      {/* Center text */}
       <div className="flex items-center justify-center w-full rounded-2xl bg-[#00F2FE] border-2 border-black shadow-[2px_4px_0px_0px_#000] overflow-hidden uppercase text-center text-xl">
         {getItemLabel(selectedItem)}
       </div>
       
-      {/* Next button */}
       <button 
         className="p-3 max-lg:p-3 rounded-2xl bg-[#F45CFF] border-2 border-black shadow-[1px_3px_0px_3px_#000] cursor-pointer"
         onClick={handleNext}

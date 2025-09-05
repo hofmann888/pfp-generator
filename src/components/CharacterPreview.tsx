@@ -16,7 +16,7 @@ export default function CharacterPreview({ selectedParts }: CharacterPreviewProp
   });
 
   return (
-    <div className="relative w-full h-full rounded-lg border-2 border-black shadow-[1px_2px_0px_3px_#000] overflow-hidden">
+    <div className="relative w-full h-auto rounded-lg border-2 border-black shadow-[1px_2px_0px_3px_#000] overflow-hidden">
       {sortedParts.map((part, index) => {
         return (
           <div key={part.id} className={`w-full h-full ${!index ? 'relative' : 'absolute top-0'}`} style={{ zIndex: index }}>
