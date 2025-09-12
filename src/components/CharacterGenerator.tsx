@@ -248,7 +248,7 @@ export default function CharacterGenerator() {
         <button
           onClick={generateCharacter}
           disabled={isGenerating}
-          className="max-md:hidden min-h-[76px] max-xl:min-h-[52px] w-full py-3 px-6 rounded-2xl bg-[#F45CFF] border-2 border-black shadow-[1px_3px_0px_3px_#000] uppercase text-white max-lg:text-lg text-3xl text-shadow-contur cursor-pointer"
+          className="max-md:hidden min-h-[76px] max-xl:min-h-[52px] w-full py-3 px-6 rounded-2xl bg-[#F45CFF] border-2 border-black shadow-[1px_3px_0px_3px_#000] uppercase text-white text-3xl max-xl:text-lg text-shadow-contur cursor-pointer"
         >
           {isGenerating ? 'Generating...' : 'Download your pfp'}
         </button>
