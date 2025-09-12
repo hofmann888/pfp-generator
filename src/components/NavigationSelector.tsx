@@ -34,7 +34,7 @@ export default function NavigationSelector<T>({
   };
 
   return (
-    <div className={`flex justify-between gap-6 max-lg:gap-4 min-h-[80px] max-xl:min-h-[56px] max-lg:min-h-[45px] max-md:min-h-[56px]`}>
+    <div className={`flex justify-between gap-6 max-lg:gap-4 min-h-[65px] max-xl:min-h-[56px] max-lg:min-h-[45px] max-md:min-h-[56px]`}>
       <button 
         className="p-3 max-lg:p-3 rounded-2xl bg-[#F45CFF] border-2 border-black shadow-[1px_3px_0px_3px_#000] cursor-pointer"
         onClick={handlePrevious}
