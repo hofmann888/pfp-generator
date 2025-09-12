@@ -29,9 +29,10 @@ export default function PartSelector({ parts, selectedPart, onPartSelect }: Part
                     <Image
                       src={part.imageUrl}
                       alt={part.name}
-                      width={73}
-                      height={73}
+                      width={358}
+                      height={358}
                       className={`w-full h-full object-cover mb-[-1px] bg-white ${isSelected ? 'rounded-xl' : 'rounded-2xl'}`}
+                      priority
                     />
                   </div>
                 </div>
@@ -54,9 +55,10 @@ export default function PartSelector({ parts, selectedPart, onPartSelect }: Part
                     <Image
                       src={part.imageUrl}
                       alt={part.name}
-                      width={73}
-                      height={73}
+                      width={358}
+                      height={358}
                       className={`w-full h-full object-cover mb-[-1px] bg-white ${isSelected ? 'rounded-xl max-2xl:rounded-[7px]' : 'rounded-2xl max-2xl:rounded-[10px]'}`}
+                      priority
                     />
                   </div>
                 </div>
