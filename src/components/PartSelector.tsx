@@ -5,6 +5,12 @@ import useEmblaCarousel from 'embla-carousel-react';
 import Image from 'next/image';
 import { getCharacterLayerByIdx } from './LayerSelector';
 
+const layerTemplateMap = {
+  'naked': ['cloth'],
+  'cloth': ['hat'],
+  'hair': ['accessory', 'eyes', 'mouth', 'face', 'mustache', 'beard'],
+}
+
 interface PartSelectorProps {
   parts: CharacterPart[];
   selectedPart: CharacterPart | null;
@@ -18,6 +24,15 @@ export default function PartSelector({
 }: PartSelectorProps) {
   const [emblaRef] = useEmblaCarousel({ align: 'start', loop: true });
 
+  const layerName = getCharacterLayerByIdx(selectedCharacter, selectedLayer);
+  let template = '';
+
+  Object.entries(layerTemplateMap).forEach(([key, value]) => {
+    if (!template.length && value.includes(layerName)) {
+      template = key;
+    }
+  });
+
   return (
     <>
       <div className="embla min-md:hidden rounded-xl p-3 bg-[#F0FF6B] border-2 border-black shadow-[1px_2px_0px_3px_#000]">
@@ -28,15 +43,25 @@ export default function PartSelector({
               return (
                 <div key={part.id} className={`embla__slide ${isSelected ? 'flex-[0_0_27%]' : 'flex-[0_0_24%]'}`}>
                   <div
-                    className={`border-1 border-black rounded-2xl shadow-[1px_2px_0px_1px_#000] cursor-pointer ${isSelected ? 'border-3' : 'border-1'}`}
+                    className={`relative overflow-hidden border-1 border-black rounded-2xl shadow-[1px_2px_0px_1px_#000] cursor-pointer ${isSelected ? 'border-3' : 'border-1'}`}
                     onClick={() => onPartSelect(part)}
                   >
+                    {!!template.length && 
+                      <Image
+                        src={`/img/pfp/templates/${selectedCharacter}/${template}.PNG`}
+                        alt="naked"
+                        width={358}
+                        height={358}
+                        className={`absolute z-0 w-full h-full object-cover mb-[-1px] bg-white ${isSelected ? 'rounded-xl max-2xl:rounded-[7px]' : 'rounded-2xl max-2xl:rounded-[10px]'}`}
+                        priority
+                      />
+                    }
                     <Image
                       src={part.imageUrl}
                       alt={part.name}
                       width={358}
                       height={358}
-                      className={`w-full h-full object-cover mb-[-1px] bg-white ${isSelected ? 'rounded-xl' : 'rounded-2xl'}`}
+                      className={`relative z-10 w-full h-full object-cover mb-[-1px] ${isSelected ? 'rounded-xl' : 'rounded-2xl'}`}
                       priority
                     />
                   </div>
@@ -54,15 +79,25 @@ export default function PartSelector({
               return (
                 <div key={part.id} className={`flex items-center flex-[0_0_20%] max-lg:flex-[0_0_25%] ${isSelected ? 'p-[1px]' : 'p-2 max-xl:p-1.5'}`}>
                   <div
-                    className={`border-1 border-black rounded-2xl max-2xl:rounded-[10px] shadow-[1px_2px_0px_1px_#000] cursor-pointer ${isSelected ? 'border-3' : 'border-1'}`}
+                    className={`relative border-1 border-black rounded-2xl max-2xl:rounded-[10px] shadow-[1px_2px_0px_1px_#000] cursor-pointer ${isSelected ? 'border-3' : 'border-1'}`}
                     onClick={() => onPartSelect(part)}
                   >
+                    {!!template.length && 
+                      <Image
+                        src={`/img/pfp/templates/${selectedCharacter}/${template}.PNG`}
+                        alt="naked"
+                        width={358}
+                        height={358}
+                        className={`absolute z-0 w-full h-full object-cover mb-[-1px] bg-white ${isSelected ? 'rounded-xl max-2xl:rounded-[7px]' : 'rounded-2xl max-2xl:rounded-[10px]'}`}
+                        priority
+                      />
+                    }
                     <Image
                       src={part.imageUrl}
                       alt={part.name}
                       width={358}
                       height={358}
-                      className={`w-full h-full object-cover mb-[-1px] bg-white ${isSelected ? 'rounded-xl max-2xl:rounded-[7px]' : 'rounded-2xl max-2xl:rounded-[10px]'}`}
+                      className={`relative z-10 w-full h-full object-cover mb-[-1px] ${isSelected ? 'rounded-xl max-2xl:rounded-[7px]' : 'rounded-2xl max-2xl:rounded-[10px]'}`}
                       priority
                     />
                   </div>
