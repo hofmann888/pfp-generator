@@ -1,3 +1,10 @@
+export type CharacterName = "ari" | "elric" | "freya" | "kenzo" | "roger";
+
+export interface Character {
+  name: CharacterName;
+  layers: CharacterLayer[];
+}
+
 export interface CharacterPart {
   id: string;
   name: string;
@@ -7,11 +14,6 @@ export interface CharacterPart {
 export interface CharacterLayer {
   layer: number;
   parts: CharacterPart[];
-}
-
-export interface Character {
-  name: string;
-  layers: CharacterLayer[];
 }
 
 export interface CharacterAssets {

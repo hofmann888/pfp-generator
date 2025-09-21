@@ -1,22 +1,17 @@
 'use client';
 
-import { CharacterLayer } from '@/lib/definitions';
+import { CharacterName, CharacterLayer } from '@/lib/definitions';
 import NavigationSelector from './NavigationSelector';
+import { charachterLayers } from '@/lib/const';
 
-type CharacterName = "ari" | "elric" | "freya" | "kenzo" | "roger";
-
-const charachterLayers = {
-  ari: ["background", "accessory", "body", "cloth", "head", "eyes", "mouth", "hat"],
-  elric: ["background", "body", "cloth", "head", "face", "eyes", "mouth", "hat", "accessory"],
-  freya: ["background", "accessory", "body", "cloth", "head", "mouth", "eyes", "hat"],
-  kenzo: ["background", "body", "cloth", "head", "face", "eyes", "mouth", "mustache", "beard", "hat"],
-  roger: ["background", "accessory", "body", "cloth", "head", "eyes", "beard", "mouth", "hat"]
-} as Record<CharacterName, string[]>;
+export function getCharacterLayerByIdx(chararacter: CharacterName, idx: number) {
+  return charachterLayers[chararacter as CharacterName][idx as any - 1]
+}
 
 interface LayerSelectorProps {
   layers: CharacterLayer[];
   selectedLayer: number;
-  selectedCharacter: string;
+  selectedCharacter: CharacterName;
   onLayerSelect: (layer: number) => void;
 }
 
@@ -37,7 +32,7 @@ export default function LayerSelector({
       items={layers}
       selectedItem={selectedLayerObj}
       onItemSelect={(layer) => onLayerSelect(layer.layer)}
-      getItemLabel={(layer) => charachterLayers[selectedCharacter as CharacterName][layer.layer as any - 1]}
+      getItemLabel={(layer) => getCharacterLayerByIdx(selectedCharacter!, layer.layer)}
     />
   );
 }

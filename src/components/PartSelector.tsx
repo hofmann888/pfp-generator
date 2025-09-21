@@ -1,16 +1,21 @@
 'use client';
 
-import { CharacterPart } from '@/lib/definitions';
+import { CharacterPart, CharacterName } from '@/lib/definitions';
 import useEmblaCarousel from 'embla-carousel-react';
 import Image from 'next/image';
+import { getCharacterLayerByIdx } from './LayerSelector';
 
 interface PartSelectorProps {
   parts: CharacterPart[];
   selectedPart: CharacterPart | null;
+  selectedLayer: number;
+  selectedCharacter: CharacterName;
   onPartSelect: (part: CharacterPart) => void;
 }
 
-export default function PartSelector({ parts, selectedPart, onPartSelect }: PartSelectorProps) {
+export default function PartSelector({ 
+  parts, selectedPart, selectedLayer, selectedCharacter, onPartSelect 
+}: PartSelectorProps) {
   const [emblaRef] = useEmblaCarousel({ align: 'start', loop: true });
 
   return (

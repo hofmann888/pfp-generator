@@ -1,6 +1,6 @@
 'use client';
 
-import { CharacterAssets, CharacterPart } from '@/lib/definitions';
+import { CharacterAssets, CharacterName, CharacterPart } from '@/lib/definitions';
 import { downloadFile } from '@telegram-apps/sdk-react';
 import { useState, useRef, useEffect } from 'react';
 import CharacterPreview from './CharacterPreview';
@@ -10,7 +10,7 @@ import PartSelector from './PartSelector';
 
 export default function CharacterGenerator() {
   const [assets, setAssets] = useState<CharacterAssets | null>(null);
-  const [selectedCharacter, setSelectedCharacter] = useState<string>('');
+  const [selectedCharacter, setSelectedCharacter] = useState<CharacterName>();
   const [selectedLayer, setSelectedLayer] = useState<number>(1);
   const [selectedParts, setSelectedParts] = useState<CharacterPart[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -79,7 +79,7 @@ export default function CharacterGenerator() {
     setSelectedParts(newSelectedParts);
   }, [assets, selectedCharacter]);
 
-  function handleCharacterSelect(characterName: string) {
+  function handleCharacterSelect(characterName: CharacterName) {
     setSelectedCharacter(characterName);
     setSelectedLayer(1);
   }
@@ -224,7 +224,7 @@ export default function CharacterGenerator() {
       <div className="w-1/2 max-md:w-full flex flex-col max-md:mt-5 gap-5 max-lg:gap-3 max-md:gap-5">
         <CharacterSelector 
           characters={assets.characters}
-          selectedCharacter={selectedCharacter}
+          selectedCharacter={selectedCharacter!}
           onCharacterSelect={handleCharacterSelect}
         />
         
@@ -232,7 +232,7 @@ export default function CharacterGenerator() {
           <LayerSelector 
             layers={currentCharacter.layers.filter(layer => layer.parts.length > 1)}
             selectedLayer={selectedLayer}
-            selectedCharacter={selectedCharacter}
+            selectedCharacter={selectedCharacter!}
             onLayerSelect={handleLayerSelect}
           />
         )}
@@ -242,6 +242,8 @@ export default function CharacterGenerator() {
             parts={currentLayer.parts}
             selectedPart={currentPart || null}
             onPartSelect={handlePartSelect}
+            selectedLayer={selectedLayer}
+            selectedCharacter={selectedCharacter!}
           />
         )}
 

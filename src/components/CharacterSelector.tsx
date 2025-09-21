@@ -1,12 +1,12 @@
 'use client';
 
-import { Character } from '@/lib/definitions';
+import { Character, CharacterName } from '@/lib/definitions';
 import NavigationSelector from './NavigationSelector';
 
 interface CharacterSelectorProps {
   characters: Character[];
-  selectedCharacter: string;
-  onCharacterSelect: (characterName: string) => void;
+  selectedCharacter: CharacterName;
+  onCharacterSelect: (characterName: CharacterName) => void;
 }
 
 export default function CharacterSelector({ 
